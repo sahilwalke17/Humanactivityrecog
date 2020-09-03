@@ -503,102 +503,16 @@ plt.show()
 ```
 
 
-![LSTM Training Testing Comparison Curve](LSTM_files/LSTM_16_0.png)
-
-
-## And finally, the multi-class confusion matrix and metrics!
-
-
-```python
-# Results
-
-predictions = one_hot_predictions.argmax(1)
-
-print("Testing Accuracy: {}%".format(100*accuracy))
-
-print("")
-print("Precision: {}%".format(100*metrics.precision_score(y_test, predictions, average="weighted")))
-print("Recall: {}%".format(100*metrics.recall_score(y_test, predictions, average="weighted")))
-print("f1_score: {}%".format(100*metrics.f1_score(y_test, predictions, average="weighted")))
-
-print("")
-print("Confusion Matrix:")
-confusion_matrix = metrics.confusion_matrix(y_test, predictions)
-print(confusion_matrix)
-normalised_confusion_matrix = np.array(confusion_matrix, dtype=np.float32)/np.sum(confusion_matrix)*100
-
-print("")
-print("Confusion matrix (normalised to % of total test data):")
-print(normalised_confusion_matrix)
-print("Note: training and testing data is not equally distributed amongst classes, ")
-print("so it is normal that more than a 6th of the data is correctly classifier in the last category.")
-
-# Plot Results:
-width = 12
-height = 12
-plt.figure(figsize=(width, height))
-plt.imshow(
-    normalised_confusion_matrix,
-    interpolation='nearest',
-    cmap=plt.cm.rainbow
-)
-plt.title("Confusion matrix \n(normalised to % of total test data)")
-plt.colorbar()
-tick_marks = np.arange(n_classes)
-plt.xticks(tick_marks, LABELS, rotation=90)
-plt.yticks(tick_marks, LABELS)
-plt.tight_layout()
-plt.ylabel('True label')
-plt.xlabel('Predicted label')
-plt.show()
-```
-
-    Testing Accuracy: 91.65252447128296%
-
-    Precision: 91.76286479743305%
-    Recall: 91.65252799457076%
-    f1_score: 91.6437546304815%
-
-    Confusion Matrix:
-    [[466   2  26   0   2   0]
-     [  5 441  25   0   0   0]
-     [  1   0 419   0   0   0]
-     [  1   1   0 396  87   6]
-     [  2   1   0  87 442   0]
-     [  0   0   0   0   0 537]]
-
-    Confusion matrix (normalised to % of total test data):
-    [[ 15.81269073   0.06786563   0.88225317   0.           0.06786563   0.        ]
-     [  0.16966406  14.96437073   0.84832031   0.           0.           0.        ]
-     [  0.03393281   0.          14.21784878   0.           0.           0.        ]
-     [  0.03393281   0.03393281   0.          13.43739319   2.95215464
-        0.20359688]
-     [  0.06786563   0.03393281   0.           2.95215464  14.99830341   0.        ]
-     [  0.           0.           0.           0.           0.          18.22192001]]
-    Note: training and testing data is not equally distributed amongst classes,
-    so it is normal that more than a 6th of the data is correctly classifier in the last category.
 
 
 
-![Confusion Matrix](LSTM_files/LSTM_18_1.png)
-
-
-
-```python
-sess.close()
-```
 
 ## Conclusion
 
 Outstandingly, **the final accuracy is of 76.8%**! And it can peak to values such as 93.25%, at some moments of luck during the training, depending on how the neural network's weights got initialized at the start of the training, randomly.
 
-This means that the neural networks is almost always able to correctly identify the movement type! Remember, the phone is attached on the waist and each series to classify has just a 128 sample window of two internal sensors (a.k.a. 2.56 seconds at 50 FPS), so it amazes me how those predictions are extremely accurate given this small window of context and raw data. I've validated and re-validated that there is no important bug, and the community used and tried this code a lot. (Note: be sure to report something in the issue tab if you find bugs, otherwise [Quora](https://www.quora.com/), [StackOverflow](https://stackoverflow.com/questions/tagged/tensorflow?sort=votes&pageSize=50), and other [StackExchange](https://stackexchange.com/sites#science) sites are the places for asking questions.)
 
-I specially did not expect such good results for guessing between the labels "SITTING" and "STANDING". Those are seemingly almost the same thing from the point of view of a device placed at waist level according to how the dataset was originally gathered. Thought, it is still possible to see a little cluster on the matrix between those classes, which drifts away just a bit from the identity. This is great.
 
-It is also possible to see that there was a slight difficulty in doing the difference between "WALKING", "WALKING_UPSTAIRS" and "WALKING_DOWNSTAIRS". Obviously, those activities are quite similar in terms of movements.
-
-I also tried my code without the gyroscope, using only the 3D accelerometer's 6 features (and not changing the training hyperparameters), and got an accuracy of 87%. In general, gyroscopes consumes more power than accelerometers, so it is preferable to turn them off.
 
 
 
