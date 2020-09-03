@@ -463,53 +463,11 @@ print("FINAL RESULT: " + \
     FINAL RESULT: Batch Loss = 0.45611169934272766, Accuracy = 0.7685252447128296
 
 
-## Training is good, but having visual insight is even better:
-
-Okay, let's plot this simply in the notebook for now.
-
-
-```python
-# (Inline plots: )
-%matplotlib inline
-
-font = {
-    'family' : 'Bitstream Vera Sans',
-    'weight' : 'bold',
-    'size'   : 18
-}
-matplotlib.rc('font', **font)
-
-width = 12
-height = 12
-plt.figure(figsize=(width, height))
-
-indep_train_axis = np.array(range(batch_size, (len(train_losses)+1)*batch_size, batch_size))
-plt.plot(indep_train_axis, np.array(train_losses),     "b--", label="Train losses")
-plt.plot(indep_train_axis, np.array(train_accuracies), "g--", label="Train accuracies")
-
-indep_test_axis = np.append(
-    np.array(range(batch_size, len(test_losses)*display_iter, display_iter)[:-1]),
-    [training_iters]
-)
-plt.plot(indep_test_axis, np.array(test_losses),     "b-", label="Test losses")
-plt.plot(indep_test_axis, np.array(test_accuracies), "g-", label="Test accuracies")
-
-plt.title("Training session's progress over iterations")
-plt.legend(loc='upper right', shadow=True)
-plt.ylabel('Training Progress (Loss or Accuracy values)')
-plt.xlabel('Training iteration')
-
-plt.show()
-```
-
-
-
-
 
 
 ## Conclusion
 
-Outstandingly, **the final accuracy is of 76.8%**! And it can peak to values such as 93.25%, at some moments of luck during the training, depending on how the neural network's weights got initialized at the start of the training, randomly.
+Outstandingly, **the final accuracy is of 76.8%**! 
 
 
 
